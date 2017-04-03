@@ -108,7 +108,7 @@ if __name__=="__main__":
     
 	print 'Prime Numbers Plotting v', version
 
-	max_value = 500
+	max_value = 1000
 	
 
 	if len(sys.argv) > 1:

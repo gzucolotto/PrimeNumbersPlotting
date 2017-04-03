@@ -1,4 +1,5 @@
 from PrimesGenerator import PrimesGenerator
+import StatisticCollector as st
 
 class PrimesGeneratorHalfWay(PrimesGenerator):
 	def __init__(self):
@@ -11,11 +12,23 @@ class PrimesGeneratorHalfWay(PrimesGenerator):
 		"""
 		count = 0
 		for j in range(1, (value / 2) + 1):
-			if value % j == 0:
-				count = count + 1
-				if count > 1:
-					break
+			# if value % j == 0:
+			# 	count = count + 1
+			# 	if count > 1:
+			# 		break
+			#FIXME: this call is not working with NoneType
+			count = self.__iteration__(value, j, count)
+			if count > 1:
+				break
 
 		if count <= 1:
 			return value
-		return 0;
+		return 0
+
+	@st.method_decorator
+	def __iteration__(self, value, j, count):
+		if value % j == 0:
+			count += 1
+			if count > 1:
+				return count
+		return count

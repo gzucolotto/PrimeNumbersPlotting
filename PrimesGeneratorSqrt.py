@@ -1,5 +1,6 @@
 from PrimesGenerator import PrimesGenerator
 import math
+import StatisticCollector as st
 
 class PrimesGeneratorSqrt(PrimesGenerator):
 	def __init__(self):
@@ -13,11 +14,22 @@ class PrimesGeneratorSqrt(PrimesGenerator):
 		"""
 		count = 0
 		for j in range(1, int(math.sqrt(value) + 1)):
-			if value % j == 0:
-				count = count + 1
-				if count > 1:
-					break
+			# if value % j == 0:
+			# 	count = count + 1
+			# 	if count > 1:
+			# 		break
+			count = self.__iteration__(value, j, count)
+			if count > 1:
+				break
 
 		if count <= 1:
 			return value
-		return 0;
+		return 0
+
+	@st.method_decorator
+	def __iteration__(self, value, j, count):
+		if value % j == 0:
+			count = count + 1
+			if count > 1:
+				return count
+		return count

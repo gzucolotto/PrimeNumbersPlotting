@@ -1,3 +1,5 @@
+import StatisticCollector as st
+
 class PrimesGenerator:
 	"""
 	Generates a series of prime numbers.
@@ -22,8 +24,14 @@ class PrimesGenerator:
 		"""
 		count = 0
 		for j in range(1, value):
-			if value % j == 0:
-				count = count + 1
+			count = self.__iteration__(value, j, count)
 		if count <= 1:
 			return value
-		return 0;
+		return 0
+
+	#TODO: insert decorator here
+	@st.method_decorator
+	def __iteration__(self, value, j, count):
+		if  value % j == 0:
+			count += 1
+		return count
