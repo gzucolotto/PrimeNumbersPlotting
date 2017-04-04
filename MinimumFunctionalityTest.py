@@ -9,6 +9,7 @@ import PrimesGeneratorPrevious as pgp
 import PrimesGeneratorPreviousSqrt as pgpsqrt
 import PrimesGeneratorBuilder as builder
 import StatisticCollector as st
+import os.path
 
 class DecoratorTarget:
 	@st.method_decorator
@@ -22,17 +23,13 @@ class DecoratorTarget:
 class MinimumFunctionalityTest(unittest.TestCase):
 
 	def setUp(self):
-		#print "----invoking setup-----", st.counter.__len__()
 		st.reset_counters()
-		#print "----should be 0-----", st.counter.__len__()
 
 	def test_decorator(self):
 		dt = DecoratorTarget()
 		dt.some_method()
 		dt.some_method()
 		count = st.counter.__len__()
-		# print "dt.some_method", dt.some_method
-		# print "dt.some_other_method", dt.some_other_method
 
 		self.assertEquals(count, 1)
 		self.assertEquals(st.counter.items()[0][1], 2)
@@ -102,11 +99,39 @@ class MinimumFunctionalityTest(unittest.TestCase):
 		self.assertEquals(series0, series4)
 		self.assertEquals(series0, series5)
 
-		# for key, value in st.counter.iteritems():
-		# 	#print "key:", key, "key.name:", key.__name__, "value:", value, "class:", key.func_name
-		# 	print "key:", key, "value:", value
+	def test_generate_report_5(self):
+		filename = "test_generate_report_5.png"
+		if os.path.exists(filename):
+			os.remove(filename)
+		for limit in range(2, 5):
+			series0 = builder.get_generator(pg).generate_series(limit)
+			series1 = builder.get_generator(pgs).generate_series(limit)
+			series2 = builder.get_generator(pghw).generate_series(limit)
+			series3 = builder.get_generator(pgsqrt).generate_series(limit)
+			series4 = builder.get_generator(pgp).generate_series(limit)
+			series5 = builder.get_generator(pgpsqrt).generate_series(limit)
+			st.store_iteration()
+		self.assertEquals(st.stored_series.__len__(), 6)
+		st.generate_report(filename)
+		self.assertTrue(os.path.exists(filename))
 
-	
+	def test_generate_report_100(self):
+		filename = "test_generate_report_100.png"
+		if os.path.exists(filename):
+			os.remove(filename)
+		for limit in range(2, 100):
+			series0 = builder.get_generator(pg).generate_series(limit)
+			series1 = builder.get_generator(pgs).generate_series(limit)
+			series2 = builder.get_generator(pghw).generate_series(limit)
+			series3 = builder.get_generator(pgsqrt).generate_series(limit)
+			series4 = builder.get_generator(pgp).generate_series(limit)
+			series5 = builder.get_generator(pgpsqrt).generate_series(limit)
+			st.store_iteration()
+
+		self.assertEquals(st.stored_series.__len__(), 6)
+		st.generate_report(filename)
+		self.assertTrue(os.path.exists(filename))
+
 
 if __name__ == '__main__':
     unittest.main()

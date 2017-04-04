@@ -1,45 +1,73 @@
 import time
+import matplotlib.pyplot as plt
+import math
 
 counter = {}
 times = {}
 lables = {}
+stored_series = {}
+stored_times = {}
+stored_labels = {}
 def method_decorator(method):
+	'''
+	Decorator to getter method invocations and execution times.
+	'''
 
 	def wrapper(*args, **kwargs):
 
-		#key = method.__name__
 		key = method
-		#key = args[0]
 		if counter.__contains__(key) is False:
-			#print 'could not find method on counter:', counter
 			counter[key] = 0
 			times[key] = 0
 			lables[key] = args[0].__module__
-			# print 'entered decorator with method', method
-			# print 'entered decorator with method.__name__', method.__name__
-			#print 'entered decorator with method.im_class', method.im_class
-			# print 'entered decorator with method.__class__', method.__class__
-			# print 'entered decorator with args', args
-			# print 'entered decorator with dir', dir(args[0])
-			# print 'entered decorator with dir', args[0].__module__
-			# print 'entered decorator with dir', dir(args[0].__module__)
-			# print 'entered decorator with kwargs', kwargs
 		init_time = time.time()
 		response = method(*args, **kwargs)
 		total_time = time.time() - init_time
 		counter[key] += 1
 		times[key] += total_time
-		#print 'current count', counter[method]
 		return response
 	return wrapper
 
-def reset_counters():
-	#counter = {}
-	#times = {}
+def reset_iteration_counters():
+	'''
+	Resets the iteration counters.
+	'''
 	counter.clear()
 	times.clear()
 	lables.clear()
 
-def generate_report():
-	#TODO: implement ploting for methods
-	pass
+def reset_counters():
+	'''
+	Resets all counters.
+	'''
+	counter.clear()
+	times.clear()
+	lables.clear()
+	stored_series.clear()
+	stored_times.clear()
+	stored_labels.clear()
+
+def store_iteration():
+	'''
+	Stores the iteration. Appends the iteration counter into store counters and reset the interation counters.
+	'''
+	for key, value in counter.iteritems(): 
+		if stored_series.__contains__(key) is False:
+			stored_series[key] = []
+			stored_times[key] = []
+			stored_labels[key] = lables[key]
+		stored_series[key].append(value)
+		stored_times[key].append(times[key])
+	reset_iteration_counters()
+
+def generate_report(filename="nroInteration.png"):
+	'''
+	Generates a report with stored invocation counters.
+	'''
+	plt.figure()
+	x_series = range(2, stored_series.items()[0][1].__len__() + 2)
+	for key, series in stored_series.iteritems():
+		plt.plot(x_series, series, label=stored_labels[key])
+	plt.legend(loc="upper left")
+	plt.grid(True)
+	plt.savefig(filename)
